@@ -72,3 +72,21 @@ CREATE TABLE dbo.Events (
 );
 GO
 
+/* TABLE: Categories
+Each Event has one or more Categories (e.g. 10km, 21km, Fun Ride). */
+
+CREATE TABLE dbo.Categories (
+    CategoryId      INT IDENTITY(1,1)   NOT NULL,
+    EventId         INT                 NOT NULL,
+    Name            NVARCHAR(100)       NOT NULL,
+    DistanceKm      DECIMAL(6,2)        NOT NULL,
+    Price           DECIMAL(8,2)        NOT NULL DEFAULT 0,
+    CONSTRAINT PK_Categories PRIMARY KEY (CategoryId),
+    CONSTRAINT FK_Categories_Events FOREIGN KEY (EventId)
+        REFERENCES dbo.Events (EventId)
+        ON DELETE CASCADE,
+    CONSTRAINT CK_Categories_DistanceKm CHECK (DistanceKm > 0),
+    CONSTRAINT CK_Categories_Price CHECK (Price >= 0)
+);
+GO
+
