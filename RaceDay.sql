@@ -55,3 +55,20 @@ CREATE TABLE dbo.UserProfiles (
 );
 GO
 
+/* TABLE: Events
+Created and owned by an Organiser (Users.Role = 'Organiser'). */
+
+CREATE TABLE dbo.Events (
+    EventId         INT IDENTITY(1,1)   NOT NULL,
+    OrganiserId     INT                 NOT NULL,
+    Name            NVARCHAR(150)       NOT NULL,
+    Description     NVARCHAR(1000)      NULL,
+    EventDate       DATE                NOT NULL,
+    Location        NVARCHAR(150)       NOT NULL,
+    CreatedAt       DATETIME2           NOT NULL DEFAULT SYSDATETIME(),
+    CONSTRAINT PK_Events PRIMARY KEY (EventId),
+    CONSTRAINT FK_Events_Users FOREIGN KEY (OrganiserId)
+        REFERENCES dbo.Users (UserId)
+);
+GO
+
