@@ -90,3 +90,22 @@ CREATE TABLE dbo.Categories (
 );
 GO
 
+/* TABLE: Enrolments
+A Participant (Users.Role = 'Participant') enters a Category. */
+
+CREATE TABLE dbo.Enrolments (
+    EnrolmentId     INT IDENTITY(1,1)   NOT NULL,
+    ParticipantId   INT                 NOT NULL,
+    CategoryId      INT                 NOT NULL,
+    EnrolmentDate   DATETIME2           NOT NULL DEFAULT SYSDATETIME(),
+    Status          NVARCHAR(20)        NOT NULL DEFAULT 'Confirmed',
+    CONSTRAINT PK_Enrolments PRIMARY KEY (EnrolmentId),
+    CONSTRAINT FK_Enrolments_Users FOREIGN KEY (ParticipantId)
+        REFERENCES dbo.Users (UserId),
+    CONSTRAINT FK_Enrolments_Categories FOREIGN KEY (CategoryId)
+        REFERENCES dbo.Categories (CategoryId),
+    CONSTRAINT UQ_Enrolments_Participant_Category UNIQUE (ParticipantId, CategoryId),
+    CONSTRAINT CK_Enrolments_Status CHECK (Status IN ('Confirmed', 'Cancelled', 'Pending'))
+);
+GO
+
