@@ -109,3 +109,22 @@ CREATE TABLE dbo.Enrolments (
 );
 GO
 
+--TABLE: Results 1-to-0..1 with Enrolments. Captured by an Organiser (CapturedByUserId). */
+
+CREATE TABLE dbo.Results (
+    ResultId            INT IDENTITY(1,1)  NOT NULL,
+    EnrolmentId         INT                NOT NULL,
+    CapturedByUserId    INT                NOT NULL,
+    FinishTime          TIME(0)            NOT NULL,
+    Position             INT                NULL,
+    CONSTRAINT PK_Results PRIMARY KEY (ResultId),
+    CONSTRAINT UQ_Results_EnrolmentId UNIQUE (EnrolmentId),
+    CONSTRAINT FK_Results_Enrolments FOREIGN KEY (EnrolmentId)
+        REFERENCES dbo.Enrolments (EnrolmentId)
+        ON DELETE CASCADE,
+    CONSTRAINT FK_Results_Users FOREIGN KEY (CapturedByUserId)
+        REFERENCES dbo.Users (UserId),
+    CONSTRAINT CK_Results_Position CHECK (Position IS NULL OR Position > 0)
+);
+GO
+
