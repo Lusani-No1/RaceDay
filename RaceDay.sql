@@ -128,3 +128,58 @@ CREATE TABLE dbo.Results (
 );
 GO
 
+
+-- SAMPLE DATA 
+
+-- 2 Organisers + 2 Participants (minimum required) + 1 extra participant
+-- for richer sample enrolments/results
+
+INSERT INTO dbo.Users (FullName, Email, PasswordHash, Role) VALUES
+('Sipho Nkosi',      'sipho.nkosi@raceday.co.za',   'HASHED_PW_1', 'Organiser'),
+('Lerato van Wyk',    'lerato.vanwyk@raceday.co.za', 'HASHED_PW_2', 'Organiser'),
+('Thabo Mokoena',     'thabo.mokoena@example.com',   'HASHED_PW_3', 'Participant'),
+('Amy Petersen',      'amy.petersen@example.com',    'HASHED_PW_4', 'Participant'),
+('Jason Naidoo',      'jason.naidoo@example.com',    'HASHED_PW_5', 'Participant');
+GO
+
+-- Profiles for the participants
+INSERT INTO dbo.UserProfiles (UserId, PhoneNumber, DateOfBirth, EmergencyContact, ProfileImageUrl) VALUES
+(3, '0821234567', '1994-03-12', 'Nomsa Mokoena - 0839876543', NULL),
+(4, '0827654321', '1990-07-25', 'Chris Petersen - 0812223344', NULL),
+(5, '0839988776', '1988-11-02', 'Priya Naidoo - 0845556677',  NULL);
+GO
+
+-- 3 Events, run by the 2 organisers
+INSERT INTO dbo.Events (OrganiserId, Name, Description, EventDate, Location) VALUES
+(1, 'Johannesburg City Marathon',   'Annual road marathon through the Johannesburg CBD and northern suburbs.', '2026-11-08', 'Johannesburg, Gauteng'),
+(1, 'Soweto Fun Run',               'Community fun run supporting local youth sports programmes.',            '2026-09-27', 'Soweto, Gauteng'),
+(2, 'Cape Winelands Cycle Tour',    'Scenic cycling event through the Cape Winelands region.',                 '2026-10-18', 'Stellenbosch, Western Cape');
+GO
+
+-- Categories for each event (at least one per event, several here)
+INSERT INTO dbo.Categories (EventId, Name, DistanceKm, Price) VALUES
+(1, '42.2km Marathon', 42.20, 350.00),
+(1, '21.1km Half Marathon', 21.10, 250.00),
+(2, '5km Fun Run', 5.00, 100.00),
+(2, '10km Run', 10.00, 150.00),
+(3, '60km Cycle', 60.00, 400.00),
+(3, '100km Cycle', 100.00, 550.00);
+GO
+
+-- Sample enrolments
+INSERT INTO dbo.Enrolments (ParticipantId, CategoryId, Status) VALUES
+(3, 1, 'Confirmed'),  -- Thabo -> Marathon 42.2km
+(4, 3, 'Confirmed'),  -- Amy   -> Soweto 5km
+(5, 5, 'Confirmed'),  -- Jason -> Cape Winelands 60km
+(3, 4, 'Confirmed'),  -- Thabo -> Soweto 10km
+(4, 6, 'Pending');    -- Amy   -> Cape Winelands 100km
+GO
+
+-- Sample results (captured by the relevant organiser)
+INSERT INTO dbo.Results (EnrolmentId, CapturedByUserId, FinishTime, Position) VALUES
+(1, 1, '03:45:12', 152),
+(2, 1, '00:28:40', 9),
+(3, 2, '02:10:05', 34);
+GO
+
+PRINT 'RaceDay database schema created and seeded successfully.';
