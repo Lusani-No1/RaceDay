@@ -37,3 +37,21 @@ CREATE TABLE dbo.Users (
 );
 GO
 
+/* TABLE: UserProfiles
+Optional extended profile info. 1-to-0..1 with Users. */
+
+CREATE TABLE dbo.UserProfiles (
+    ProfileId           INT IDENTITY(1,1)  NOT NULL,
+    UserId              INT                NOT NULL,
+    PhoneNumber         NVARCHAR(20)       NULL,
+    DateOfBirth         DATE               NULL,
+    EmergencyContact    NVARCHAR(100)      NULL,
+    ProfileImageUrl     NVARCHAR(255)      NULL,
+    CONSTRAINT PK_UserProfiles PRIMARY KEY (ProfileId),
+    CONSTRAINT UQ_UserProfiles_UserId UNIQUE (UserId),
+    CONSTRAINT FK_UserProfiles_Users FOREIGN KEY (UserId)
+        REFERENCES dbo.Users (UserId)
+        ON DELETE CASCADE
+);
+GO
+
